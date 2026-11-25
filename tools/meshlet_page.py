@@ -76,6 +76,9 @@ import struct
 import sys
 import zlib
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # -I keeps the script directory off sys.path
+from report_paths import same_report_path as same_output_path  # noqa: E402
+
 BLOCK_MAGIC = 0x3063
 OTHER_BLOCK_MAGIC = 0x4042
 HEADER_SIZE = 0x60
@@ -913,15 +916,6 @@ def draw_binding(system, graphics, geometry):
     if (group["vertex_span"] > count or ((end + 15) & ~15) != index_bytes or any(data[end:])):
         raise PageError("group references or padded extent exceed the declared layout")
     return {"vertex_block": vertex, "meshlet_group": index, "vertices": count}
-
-
-def same_output_path(first, second):
-    if os.path.normcase(os.path.realpath(first)) == os.path.normcase(os.path.realpath(second)):
-        return True
-    try:
-        return os.path.samefile(first, second)
-    except OSError:
-        return False
 
 
 def is_scanned_input(path, input_path):
